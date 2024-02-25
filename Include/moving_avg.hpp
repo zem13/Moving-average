@@ -10,6 +10,9 @@
 template <typename T>
 void simpleMovingAverage(T const *data, size_t data_size, size_t window_size, T *result)
 {
+    if (data_size < window_size)
+        return;
+
     T sum = 0;
     for (int i = 0; i < window_size; i++)
     {
@@ -29,10 +32,14 @@ void simpleMovingAverage(T const *data, size_t data_size, size_t window_size, T 
 template <typename T>
 std::vector<T> simpleMovingAverageMapReduce(std::vector<T> data, size_t window_size, size_t threads_num)
 {
+    if (data.size() < window_size)
+        return std::vector<T>();
+
     /// Calculate data size for every thread.
     size_t addition = data.size() / threads_num;
     size_t remainder = data.size() % threads_num;
     std::vector<size_t> data_sizes(threads_num, addition);
+
     /// Add the remaining values to the first threads to ensure that sum(data_sizes) == data.size()
     for (int i = 0; i < remainder; i++)
     {
